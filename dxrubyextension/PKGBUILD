@@ -1,0 +1,31 @@
+# Maintainer: akisute3 <akisute3@gmail.com>
+pkgname=dxrubyextension
+pkgver=1.0.4
+pkgrel=1
+pkgdesc="Extensional library for DXRuby"
+arch=('i686' 'x86_64')
+url="http://dxruby.sourceforge.jp/"
+depends=('ruby')
+makedepends=('subversion')
+provides=("$pkgname")
+conflicts=("$pkgname")
+source=(svn+http://svn.sourceforge.jp/svnroot/dxruby/dxrubyextension/
+        $pkgname-hresult.diff)
+md5sums=('SKIP'
+         '53db9ddf1602cbb3eb00f2e9c13a5756')
+
+prepare() {
+  cd $pkgname
+  patch < ../$pkgname-hresult.diff
+}
+
+build() {
+  cd $pkgname
+  ruby extconf.rb
+  make
+}
+
+package() {
+  cd $pkgname
+  make includedir=/usr/include DESTDIR=$pkgdir install
+}
