@@ -1,0 +1,27 @@
+# Maintainer: akisute3 <akisute3@gmail.com>
+pkgname=starruby
+pkgver=20130615
+pkgrel=1
+pkgdesc="Ruby extensional library for creating games"
+arch=('i686' 'x86_64')
+url="https://github.com/hajimehoshi/starruby"
+license=('MIT')
+# Can't find 'libGL / libopengl32', 'libruby18 / libruby19' and 'SDL'
+depends=('ruby' 'freetype2' 'libpng' 'libogg' 'libvorbis' 'sdl_mixer' 'sdl_ttf' 'smpeg' 'zlib')
+makedepends=('git')
+provides=("$pkgname")
+conflicts=("$pkgname")
+source=(git://github.com/hajimehoshi/$pkgname.git)
+md5sums=('SKIP')
+
+build() {
+  cd $pkgname
+  ruby extconf.rb
+  make
+}
+
+package() {
+  cd $pkgname
+  make includedir=/usr/include DESTDIR=$pkgdir install
+  install -Dm644 $srcdir/$pkgname/COPYING $pkgdir/usr/share/licenses/$pkgname/COPYING
+}
