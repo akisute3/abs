@@ -1,0 +1,33 @@
+# Maintainer: akisute3 <akisute3@gmail.com>
+_pkgname=dmenu
+pkgname=my-$_pkgname
+pkgver=4.5
+pkgrel=1
+pkgdesc="dmenu for emacs user."
+arch=('i686' 'x86_64')
+url="http://tools.suckless.org/dmenu/"
+license=('MIT')
+depends=('libx11' 'libxinerama')
+makedepends=('xineramaproto')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+source=(http://dl.suckless.org/tools/$_pkgname-$pkgver.tar.gz
+        $_pkgname-$pkgver-history-and-cgescape.diff)
+md5sums=('9c46169ed703732ec52ed946c27d84b4'
+         '1ba541558f3f24edde12cc202f7829cb')
+
+prepare() {
+  cd $srcdir/$_pkgname-$pkgver
+  patch -p1 < ../$_pkgname-$pkgver-history-and-cgescape.diff
+}
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+  make DESTDIR=$pkgdir/ install
+  install -Dm644 $srcdir/$_pkgname-$pkgver/LICENSE $pkgdir/usr/share/licenses/$_pkgname-$pkgver/LICENSE
+}
